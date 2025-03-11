@@ -1,13 +1,12 @@
-name: Publish pre-release
+name: Publish
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [published]
   workflow_dispatch:
   
 jobs:
-  pre-release:
+  release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,7 +23,9 @@ jobs:
       - name: Package extension
         run: vsce package
 
-      - name: Publish extension
-        run: vsce publish patch --pre-release --pat ${{ secrets.VSCE_TOKEN }}
-        env:
-          VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
+      - name: Upload extension
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension
+          path: "*.vsix"
+          if-no-files-found: error
