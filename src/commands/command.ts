@@ -22,7 +22,7 @@ export class Commands {
                     location: vscode.ProgressLocation.Notification,
                     title: 'Querying transaction...',
                     cancellable: false,
-                }, (progress, token) => {
+                }, () => {
                     return new Promise(async (resolve, reject) => {
                         const baseUrl = Configuration.GetChainRestUrl();
                         const queryTxUrl = `${baseUrl}/cosmos/tx/v1beta1/txs/${txHash}`;
@@ -33,7 +33,12 @@ export class Commands {
                         }
                         const data = await response.json();
                         const display = JSON.stringify(data, null, 2);
-
+                        vscode.workspace.openTextDocument({
+                            language: "json",
+                            content: display
+                        }).then(doc => {
+                            vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside);
+                        });
                         resolve(undefined);
                     });
                 })
