@@ -2,6 +2,7 @@
   "name": "cosmos-connect",
   "displayName": "Cosmos Connect",
   "description": "Connect to chains built on Cosmos-SDK",
+  "author": "Spoorthi",
   "repository": "https://github.com/cosmy-wasmy/cosmos-connect",
   "license": "SEE LICENSE IN LICENSE",
   "version": "0.0.1",
@@ -19,6 +20,19 @@
         "command": "cosmos-connect.queryTx",
         "title": "Query Tx",
         "category": "Cosmos Connect"
+      }
+    ],
+    "configuration": [
+      {
+        "title": "Cosmos Connect",
+        "properties": {
+          "cosmos-connect.rest": {
+            "type": "string",
+            "default": "https://api.mainnet.archway.io/",
+            "description": "REST API URL of the chain",
+            "title": "REST API URL"
+          }
+        }
       }
     ]
   },
@@ -49,5 +63,8 @@
     "typescript": "^5.7.3",
     "webpack": "^5.98.0",
     "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "fetch": "^1.1.0"
   }
 }
