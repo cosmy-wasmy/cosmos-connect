@@ -2,6 +2,7 @@
   "name": "cosmos-connect",
   "displayName": "Cosmos Connect",
   "description": "Connect to chains built on Cosmos-SDK",
+  "publisher": "Spoorthi",
   "repository": "https://github.com/cosmy-wasmy/cosmos-connect",
   "license": "SEE LICENSE IN LICENSE",
   "version": "0.0.1",
