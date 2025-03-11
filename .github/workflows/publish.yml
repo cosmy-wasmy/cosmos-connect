@@ -1,0 +1,31 @@
+name: Deploy to Visual Studio Marketplace
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+  
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+
+      - name: Install dependencies
+        run: |
+          npm install
+          npm install --global vsce
+
+      - name: Package extension
+        run: vsce package
+
+      - name: Upload extension
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension
+          path: "*.vsix"
+          if-no-files-found: error
