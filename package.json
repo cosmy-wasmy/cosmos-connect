@@ -3,6 +3,7 @@
   "displayName": "Cosmos Connect",
   "description": "Connect to chains built on Cosmos-SDK",
   "repository": "https://github.com/cosmy-wasmy/cosmos-connect",
+  "license": "SEE LICENSE IN LICENSE",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.98.0"
