@@ -7,6 +7,7 @@ export class Commands {
         this.registerQueryLatestBlockCommand(context);
         this.registerQueryBlockByHeightCommand(context);
         this.registerQueryAllModuleAccountsCommand(context);
+        this.registerQueryAllDenomsMetadataCommand(context);
     }
 
     private static registerQueryTxCommand(context: vscode.ExtensionContext) {
@@ -162,6 +163,35 @@ export class Commands {
                     const response = await fetch(queryAllModuleAccountsUrl);
                     if (!response.ok) {
                         vscode.window.showErrorMessage(`Failed to query all module accounts: ${response.statusText}`);
+                        reject();
+                    }
+                    const data = await response.json();
+                    const display = JSON.stringify(data, null, 2);
+                    vscode.workspace.openTextDocument({
+                        language: "json",
+                        content: display
+                    }).then(doc => {
+                        vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside);
+                    });
+                    resolve(undefined);
+                });
+            });
+        }));
+    }
+
+    private static registerQueryAllDenomsMetadataCommand(context: vscode.ExtensionContext) {
+        context.subscriptions.push(vscode.commands.registerCommand('cosmos-connect.queryAllDenomsMetadata', () => {
+            vscode.window.withProgress({
+                location: vscode.ProgressLocation.Notification,
+                title: 'Querying all denoms metadata...',
+                cancellable: false,
+            }, () => {
+                return new Promise(async (resolve, reject) => {
+                    const baseUrl = Configuration.GetChainRestUrl();
+                    const queryAllDenomsMetadataUrl = `${baseUrl}/cosmos/bank/v1beta1/denoms_metadata`;
+                    const response = await fetch(queryAllDenomsMetadataUrl);
+                    if (!response.ok) {
+                        vscode.window.showErrorMessage(`Failed to query all denoms metadata: ${response.statusText}`);
                         reject();
                     }
                     const data = await response.json();

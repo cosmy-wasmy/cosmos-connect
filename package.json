@@ -46,6 +46,11 @@
         "command": "cosmos-connect.queryAllModuleAccounts",
         "title": "Query All Module Accounts",
         "category": "Cosmos Connect"
+      },
+      {
+        "command": "cosmos-connect.queryAllDenomsMetadata",
+        "title": "Query All Denoms Metadata",
+        "category": "Cosmos Connect"
       }
     ],
     "configuration": [
