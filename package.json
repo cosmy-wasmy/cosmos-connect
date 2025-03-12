@@ -41,6 +41,11 @@
         "command": "cosmos-connect.queryBlockByHeight",
         "title": "Query Block By Height",
         "category": "Cosmos Connect"
+      },
+      {
+        "command": "cosmos-connect.queryAllModuleAccounts",
+        "title": "Query All Module Accounts",
+        "category": "Cosmos Connect"
       }
     ],
     "configuration": [

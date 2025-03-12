@@ -6,6 +6,7 @@ export class Commands {
         this.registerQueryNodeInfoCommand(context);
         this.registerQueryLatestBlockCommand(context);
         this.registerQueryBlockByHeightCommand(context);
+        this.registerQueryAllModuleAccountsCommand(context);
     }
 
     private static registerQueryTxCommand(context: vscode.ExtensionContext) {
@@ -144,6 +145,35 @@ export class Commands {
                         resolve(undefined);
                     });
                 })
+            });
+        }));
+    }
+
+    private static registerQueryAllModuleAccountsCommand(context: vscode.ExtensionContext) {
+        context.subscriptions.push(vscode.commands.registerCommand('cosmos-connect.queryAllModuleAccounts', () => {
+            vscode.window.withProgress({
+                location: vscode.ProgressLocation.Notification,
+                title: 'Querying all module accounts...',
+                cancellable: false,
+            }, () => {
+                return new Promise(async (resolve, reject) => {
+                    const baseUrl = Configuration.GetChainRestUrl();
+                    const queryAllModuleAccountsUrl = `${baseUrl}/cosmos/auth/v1beta1/module_accounts`;
+                    const response = await fetch(queryAllModuleAccountsUrl);
+                    if (!response.ok) {
+                        vscode.window.showErrorMessage(`Failed to query all module accounts: ${response.statusText}`);
+                        reject();
+                    }
+                    const data = await response.json();
+                    const display = JSON.stringify(data, null, 2);
+                    vscode.workspace.openTextDocument({
+                        language: "json",
+                        content: display
+                    }).then(doc => {
+                        vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside);
+                    });
+                    resolve(undefined);
+                });
             });
         }));
     }
