@@ -36,6 +36,11 @@
         "command": "cosmos-connect.queryLatestBlock",
         "title": "Query Latest Block",
         "category": "Cosmos Connect"
+      },
+      {
+        "command": "cosmos-connect.queryBlockByHeight",
+        "title": "Query Block By Height",
+        "category": "Cosmos Connect"
       }
     ],
     "configuration": [

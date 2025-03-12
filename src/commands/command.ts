@@ -5,6 +5,7 @@ export class Commands {
         this.registerQueryTxCommand(context);
         this.registerQueryNodeInfoCommand(context);
         this.registerQueryLatestBlockCommand(context);
+        this.registerQueryBlockByHeightCommand(context);
     }
 
     private static registerQueryTxCommand(context: vscode.ExtensionContext) {
@@ -103,6 +104,47 @@ export class Commands {
                     resolve(undefined);
                 });
             })
+        }));
+    }
+
+    private static registerQueryBlockByHeightCommand(context: vscode.ExtensionContext) {
+        context.subscriptions.push(vscode.commands.registerCommand('cosmos-connect.queryBlockByHeight', () => {
+            vscode.window.showInputBox({
+                title: 'Block Height',
+                placeHolder: 'Enter the block height',
+                validateInput: (value) => {
+                    const sha256Regex = /^[0-9]+$/;
+                    if (!sha256Regex.test(value)) {
+                        return 'Please enter a valid block height';
+                    }
+                    return null;
+                }
+            }).then((blockHeight) => {
+                vscode.window.withProgress({
+                    location: vscode.ProgressLocation.Notification,
+                    title: `Querying block ${blockHeight}...`,
+                    cancellable: false,
+                }, () => {
+                    return new Promise(async (resolve, reject) => {
+                        const baseUrl = Configuration.GetChainRestUrl();
+                        const queryBlockByHeightUrl = `${baseUrl}/cosmos/base/tendermint/v1beta1/blocks/${blockHeight}`;
+                        const response = await fetch(queryBlockByHeightUrl);
+                        if (!response.ok) {
+                            vscode.window.showErrorMessage(`Failed to query block ${blockHeight}: Status: ${response.status} ${response.statusText}`);
+                            reject();
+                        }
+                        const data = await response.json();
+                        const display = JSON.stringify(data, null, 2);
+                        vscode.workspace.openTextDocument({
+                            language: "json",
+                            content: display
+                        }).then(doc => {
+                            vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside);
+                        });
+                        resolve(undefined);
+                    });
+                })
+            });
         }));
     }
 }
