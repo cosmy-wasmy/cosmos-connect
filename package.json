@@ -5,14 +5,20 @@
   "publisher": "Spoorthi",
   "repository": "https://github.com/cosmy-wasmy/cosmos-connect",
   "license": "SEE LICENSE IN LICENSE",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.98.0"
   },
   "categories": [
-    "Debuggers", "Testing", "Other"
+    "Debuggers",
+    "Testing",
+    "Other"
   ],
-  "keywords": ["cosmos", "cosmos-sdk", "tendermint"],
+  "keywords": [
+    "cosmos",
+    "cosmos-sdk",
+    "tendermint"
+  ],
   "preview": true,
   "activationEvents": [],
   "browser": "./dist/web/extension.js",
@@ -51,6 +57,16 @@
         "command": "cosmos-connect.queryAllDenomsMetadata",
         "title": "Query All Denoms Metadata",
         "category": "Cosmos Connect"
+      },
+      {
+        "command": "cosmos-connect.subscribeToNewBlock",
+        "title": "Subscribe To New Blocks",
+        "category": "Cosmos Connect"
+      },
+      {
+        "command": "cosmos-connect.unsubscribeFromNewBlock",
+        "title": "Unsubscribe From New Blocks",
+        "category": "Cosmos Connect"
       }
     ],
     "configuration": [
@@ -82,6 +98,7 @@
     "@types/mocha": "^10.0.10",
     "@types/vscode": "^1.98.0",
     "@types/webpack-env": "^1.18.8",
+    "@types/ws": "^8.18.0",
     "@typescript-eslint/eslint-plugin": "^8.25.0",
     "@typescript-eslint/parser": "^8.25.0",
     "@vscode/test-web": "^0.0.67",
@@ -96,6 +113,7 @@
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
-    "fetch": "^1.1.0"
+    "fetch": "^1.1.0",
+    "ws": "^8.18.1"
   }
 }

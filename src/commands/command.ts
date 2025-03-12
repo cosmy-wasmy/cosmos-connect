@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { Configuration } from '../web/configuration';
+
 export class Commands {
     public static Register(context: vscode.ExtensionContext) {
         this.registerQueryTxCommand(context);
@@ -8,6 +9,8 @@ export class Commands {
         this.registerQueryBlockByHeightCommand(context);
         this.registerQueryAllModuleAccountsCommand(context);
         this.registerQueryAllDenomsMetadataCommand(context);
+        this.registerSubscibeToNewBlockCommand(context);
+        this.registerUnsubscribeToNewBlockCommand(context);
     }
 
     private static registerQueryTxCommand(context: vscode.ExtensionContext) {
@@ -205,6 +208,38 @@ export class Commands {
                     resolve(undefined);
                 });
             });
+        }));
+    }
+
+    private static registerSubscibeToNewBlockCommand(context: vscode.ExtensionContext) {
+        context.subscriptions.push(vscode.commands.registerCommand('cosmos-connect.subscribeToNewBlock', () => {
+            const ws = new WebSocket('wss://rpc.lavenderfive.com/archway/websocket');
+            const params = `{"jsonrpc": "2.0","method": "subscribe","id": 0,"params": {"query": "tm.event='NewBlock'"}}`;
+            ws.onopen = () => {
+                ws.send(params);
+                vscode.window.showInformationMessage('Subscribed to new blocks...');
+            };
+            ws.onmessage = function(msg) {
+                const data = JSON.parse(msg.data);
+                if (data.id !== 0) {
+                    return;
+                }
+                if (data.result) {
+                    const block = data.result;
+                    vscode.workspace.openTextDocument({
+                        language: "json",
+                        content: JSON.stringify(block, null, 2)
+                    }).then(doc => {
+                        vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside);
+                    });
+                }
+            }
+        }));
+    }
+
+    private static registerUnsubscribeToNewBlockCommand(context: vscode.ExtensionContext) {
+        context.subscriptions.push(vscode.commands.registerCommand('cosmos-connect.unsubscribeFromNewBlock', () => {
+            vscode.window.showInformationMessage('Unsubscribed from new blocks...');
         }));
     }
 }
