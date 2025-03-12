@@ -217,15 +217,22 @@ export class Commands {
             const params = `{"jsonrpc": "2.0","method": "subscribe","id": 0,"params": {"query": "tm.event='NewBlock'"}}`;
             ws.onopen = () => {
                 ws.send(params);
-                vscode.window.showInformationMessage('Subscribed to new blocks...');
             };
             ws.onmessage = function(msg) {
                 const data = JSON.parse(msg.data);
                 if (data.id !== 0) {
                     return;
                 }
-                if (data.result) {
-                    const block = data.result;
+                if (!data.result || Object.keys(data.result).length === 0) {
+                    vscode.window.showInformationMessage('Subscribed to new blocks...');
+                    return;
+                }
+                const block = data.result;
+                const height = block.data.value.block.header.height;
+                const time = block.data.value.block.header.time;
+                const txCount = block.data.value.block.data.txs.length;
+                global.blocksViewProvider.appendBlock(height, txCount, time);
+                if (txCount > 0) {
                     vscode.workspace.openTextDocument({
                         language: "json",
                         content: JSON.stringify(block, null, 2)

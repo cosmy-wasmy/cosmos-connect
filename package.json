@@ -81,6 +81,41 @@
           }
         }
       }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "cosmos-connect.subscribeToNewBlock",
+          "when": "view == blocks",
+          "group": "inline"
+        }
+      ]
+    },
+    "views": {
+      "cosmos-connect":[
+        {
+          "id": "blocks",
+          "name": "Blocks",
+          "type": "tree",
+          "visibility": "visible",
+          "icon": "images/icon.svg"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "cosmos-connect",
+          "title": "Cosmos Connect",
+          "icon": "images/icon.svg"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "blocks",
+        "contents": "Subscribe to new blocks on the chain. \n [Subscribe](command:cosmos-connect.subscribeToNewBlock)"
+      }
     ]
   },
   "scripts": {
