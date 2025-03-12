@@ -26,6 +26,11 @@
         "command": "cosmos-connect.queryTx",
         "title": "Query Tx",
         "category": "Cosmos Connect"
+      },
+      {
+        "command": "cosmos-connect.queryNodeInfo",
+        "title": "Query Node Info",
+        "category": "Cosmos Connect"
       }
     ],
     "configuration": [
