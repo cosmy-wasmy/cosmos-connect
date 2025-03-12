@@ -2,7 +2,7 @@
   "name": "cosmos-connect",
   "displayName": "Cosmos Connect",
   "description": "Connect to chains built on Cosmos-SDK",
-  "author": "Spoorthi",
+  "publisher": "Spoorthi",
   "repository": "https://github.com/cosmy-wasmy/cosmos-connect",
   "license": "SEE LICENSE IN LICENSE",
   "version": "0.0.2",
@@ -10,10 +10,16 @@
     "vscode": "^1.98.0"
   },
   "categories": [
-    "Other"
+    "Debuggers", "Testing", "Other"
   ],
+  "keywords": ["cosmos", "cosmos-sdk", "tendermint"],
+  "preview": true,
   "activationEvents": [],
   "browser": "./dist/web/extension.js",
+  "extensionKind": [
+    "ui",
+    "workspace"
+  ],
   "contributes": {
     "commands": [
       {
