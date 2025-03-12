@@ -218,7 +218,6 @@ export class Commands {
             ws.onopen = () => {
                 ws.send(params);
             };
-            let count = 0;
             ws.onmessage = function(msg) {
                 const data = JSON.parse(msg.data);
                 if (data.id !== 0) {
@@ -233,19 +232,6 @@ export class Commands {
                 const time = block.data.value.block.header.time;
                 const txCount = block.data.value.block.data.txs.length;
                 global.blocksViewProvider.appendBlock(height, block.data.value.block.data.txs, time);
-                if (txCount > 0) {
-                    count += 1;
-                    vscode.workspace.openTextDocument({
-                        language: "json",
-                        content: JSON.stringify(block, null, 2)
-                    }).then(doc => {
-                        vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside);
-                    });
-                }
-                if (count > 3) {
-                    ws.close();
-                    vscode.window.showInformationMessage('Unsubscribed from new blocks...');
-                }
             }
         }));
     }

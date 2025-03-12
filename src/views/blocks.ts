@@ -15,26 +15,26 @@ export class BlocksProvider implements vscode.TreeDataProvider<BlockItem> {
         const txs_items = await Promise.all(txs.map(async (raw_tx, index) => {
             const binaryData = atob(raw_tx);
             const buffer = new Uint8Array(binaryData.length);
-
             for (let i = 0; i < binaryData.length; i++) {
                 buffer[i] = binaryData.charCodeAt(i);
             }
             const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
             const tx_hash = Array.from(new Uint8Array(hashBuffer))
                 .map(byte => byte.toString(16).padStart(2, '0'))
-                .join('');
-            //const tx_hash = createHash('sha256').update(buffer).digest('hex')
+                .join('').toLocaleUpperCase();
             const tx = decodeTxRaw(base64js.toByteArray(raw_tx));
             const tx_label = `tx[${index}]`;
-            const tx_id = `${id}-${index}`;
-            const tx_description = `msgs: ${tx.body.messages.length}`;
-            const msgs_items = tx.body.messages.map((msg, index) => {
+            const tx_id = tx_hash;
+            const tx_description = tx.body.memo;
+            const txhashItem = new BlockItem("hash", `${tx_id}-hash`, tx_hash, tx_hash, BlockItemType.Info, []);
+            const msgsItem = new BlockItem("msgs", `${tx_id}-msgs`, `${tx.body.messages.length}`, `msgs: ${tx.body.messages.length}`, BlockItemType.Info, tx.body.messages.map((msg, index) => {
                 const msg_label = `msg[${index}]`;
                 const msg_id = `${tx_id}-${index}`;
                 const msg_description = msg.typeUrl;
                 return new BlockItem(msg_label, msg_id, msg_description, msg_description, BlockItemType.Message, []);
-            });
-            return new BlockItem(tx_label, tx_id, tx_description, tx_hash.toUpperCase(), BlockItemType.Transaction, msgs_items);
+            }));
+            const msgs_items = [txhashItem, msgsItem];
+            return new BlockItem(tx_label, tx_id, tx_description, tx_hash, BlockItemType.Transaction, msgs_items);
         }));
         const block = new BlockItem(label, id, description, tooltip, BlockItemType.Block, txs_items);
         this.blocks.push(block);
@@ -83,5 +83,6 @@ class BlockItem extends vscode.TreeItem {
 enum BlockItemType {
     Block = 1,
     Transaction = 2,
-    Message = 3
+    Message = 3,
+    Info = 4
 }
