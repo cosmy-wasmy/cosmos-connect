@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { CosmosWS } from '../utils/ws';
+import { CustomItem } from '../views/custom';
 import { Configuration } from '../web/configuration';
 
 export class Commands {
@@ -11,6 +12,8 @@ export class Commands {
         this.registerQueryAllModuleAccountsCommand(context);
         this.registerQueryAllDenomsMetadataCommand(context);
         this.registerSubscibeToNewBlockCommand(context);
+        this.registerSubscibeToCustomEventCommand(context);
+        this.registerOpenCustomEventCommand(context);
     }
 
     private static registerQueryTxCommand(context: vscode.ExtensionContext) {
@@ -234,6 +237,51 @@ export class Commands {
                     });
                 })
             })
+        }));
+    }
+
+    private static registerSubscibeToCustomEventCommand(context: vscode.ExtensionContext) {
+        context.subscriptions.push(vscode.commands.registerCommand('cosmos-connect.subscribeToCustomEvent', async () => {
+            vscode.window.showInputBox({
+                title: 'Custom Event',
+                placeHolder: "tm.event='Tx'",
+            }).then((query) => {
+                if (query) {
+                    vscode.window.withProgress({
+                        location: vscode.ProgressLocation.Notification,
+                        cancellable: true,
+                    }, (progress, cancellationToken) => {
+                        return new Promise(async (resolve, reject) => {
+                            progress.report({ message: 'Creating WebSocket connection' });
+                            const ws = new CosmosWS();
+                            progress.report({ message: 'Subscribing to custom events' });
+                            ws.SubscribeToNewBlocks(query, (event) => {
+                                global.customViewProvider.appendCustomItem(JSON.stringify(event, null, 2));
+                            }
+                            );
+                            cancellationToken.onCancellationRequested(() => {
+                                progress.report({ message: 'Unsubscribing from custom event' });
+                                ws.Unsubscribe();
+                                resolve(undefined);
+                            });
+                        })
+                    });
+                }
+            });
+
+        }));
+    }
+
+    private static registerOpenCustomEventCommand(context: vscode.ExtensionContext) {
+        context.subscriptions.push(vscode.commands.registerCommand('cosmos-connect.openCustomEvent', async (event: CustomItem) => {
+            if (event) {
+                vscode.workspace.openTextDocument({
+                    language: "json",
+                    content: event.info
+                }).then(doc => {
+                    vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside);
+                });
+            }
         }));
     }
 }

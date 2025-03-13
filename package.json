@@ -61,6 +61,19 @@
       {
         "command": "cosmos-connect.subscribeToNewBlock",
         "title": "Subscribe To New Blocks",
+        "icon": "$(debug-start)",
+        "category": "Cosmos Connect"
+      },
+      {
+        "command": "cosmos-connect.subscribeToCustomEvent",
+        "title": "Subscribe To Custom Event",
+        "icon": "$(debug-start)",
+        "category": "Cosmos Connect"
+      },
+      {
+        "command": "cosmos-connect.openCustomEvent",
+        "title": "Open Custom Event",
+        "icon": "$(link-external)",
         "category": "Cosmos Connect"
       }
     ],
@@ -88,7 +101,12 @@
         {
           "command": "cosmos-connect.subscribeToNewBlock",
           "when": "view == blocks",
-          "group": "inline"
+          "group": "navigation"
+        },
+        {
+          "command": "cosmos-connect.subscribeToCustomEvent",
+          "when": "view == custom",
+          "group": "navigation"
         }
       ]
     },
@@ -97,6 +115,13 @@
         {
           "id": "blocks",
           "name": "Blocks",
+          "type": "tree",
+          "visibility": "visible",
+          "icon": "images/icon.svg"
+        },
+        {
+          "id": "custom",
+          "name": "Custom",
           "type": "tree",
           "visibility": "visible",
           "icon": "images/icon.svg"
@@ -116,6 +141,10 @@
       {
         "view": "blocks",
         "contents": "Subscribe to new blocks on the chain. \n [Subscribe](command:cosmos-connect.subscribeToNewBlock)"
+      },
+      {
+        "view": "custom",
+        "contents": "Subscribe to any custom event on the chain. \n [Subscribe](command:cosmos-connect.subscribeToCustomEvent)"
       }
     ]
   },
