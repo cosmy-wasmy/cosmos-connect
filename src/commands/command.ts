@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { CosmosWS } from '../utils/ws';
 import { Configuration } from '../web/configuration';
 
 export class Commands {
@@ -10,7 +11,6 @@ export class Commands {
         this.registerQueryAllModuleAccountsCommand(context);
         this.registerQueryAllDenomsMetadataCommand(context);
         this.registerSubscibeToNewBlockCommand(context);
-        this.registerUnsubscribeToNewBlockCommand(context);
     }
 
     private static registerQueryTxCommand(context: vscode.ExtensionContext) {
@@ -212,33 +212,28 @@ export class Commands {
     }
 
     private static registerSubscibeToNewBlockCommand(context: vscode.ExtensionContext) {
-        context.subscriptions.push(vscode.commands.registerCommand('cosmos-connect.subscribeToNewBlock', () => {
-            const ws = new WebSocket('wss://rpc.lavenderfive.com/cosmoshub/websocket');
-            const params = `{"jsonrpc": "2.0","method": "subscribe","id": 0,"params": {"query": "tm.event='NewBlock'"}}`;
-            ws.onopen = () => {
-                ws.send(params);
-            };
-            ws.onmessage = function(msg) {
-                const data = JSON.parse(msg.data);
-                if (data.id !== 0) {
-                    return;
-                }
-                if (!data.result || Object.keys(data.result).length === 0) {
-                    vscode.window.showInformationMessage('Subscribed to new blocks...');
-                    return;
-                }
-                const block = data.result;
-                const height = block.data.value.block.header.height;
-                const time = block.data.value.block.header.time;
-                const txCount = block.data.value.block.data.txs.length;
-                global.blocksViewProvider.appendBlock(height, block.data.value.block.data.txs, time);
-            }
-        }));
-    }
-
-    private static registerUnsubscribeToNewBlockCommand(context: vscode.ExtensionContext) {
-        context.subscriptions.push(vscode.commands.registerCommand('cosmos-connect.unsubscribeFromNewBlock', () => {
-            vscode.window.showInformationMessage('Unsubscribed from new blocks...');
+        context.subscriptions.push(vscode.commands.registerCommand('cosmos-connect.subscribeToNewBlock', async () => {
+            vscode.window.withProgress({
+                location: vscode.ProgressLocation.Notification,
+                cancellable: true,
+            }, (progress, cancellationToken) => {
+                return new Promise(async (resolve, reject) => {
+                    progress.report({ message: 'Creating WebSocket connection' });
+                    const ws = new CosmosWS();
+                    progress.report({ message: 'Subscribing to new blocks' });
+                    ws.SubscribeToNewBlocks("tm.event='NewBlock'", (block) => {
+                        const height = block.data.value.block.header.height;
+                        const time = block.data.value.block.header.time;
+                        global.blocksViewProvider.appendBlock(height, block.data.value.block.data.txs, time);
+                    }
+                    );
+                    cancellationToken.onCancellationRequested(() => {
+                        progress.report({ message: 'Unsubscribing from NewBlock event' });
+                        ws.Unsubscribe();
+                        resolve(undefined);
+                    });
+                })
+            })
         }));
     }
 }

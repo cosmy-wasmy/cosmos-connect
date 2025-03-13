@@ -62,11 +62,6 @@
         "command": "cosmos-connect.subscribeToNewBlock",
         "title": "Subscribe To New Blocks",
         "category": "Cosmos Connect"
-      },
-      {
-        "command": "cosmos-connect.unsubscribeFromNewBlock",
-        "title": "Unsubscribe From New Blocks",
-        "category": "Cosmos Connect"
       }
     ],
     "configuration": [
@@ -78,6 +73,12 @@
             "default": "https://api.mainnet.archway.io/",
             "description": "REST API URL of the chain",
             "title": "REST API URL"
+          },
+          "cosmos-connect.websocket": {
+            "type": "string",
+            "default": "wss://rpc.lavenderfive.com/cosmoshub/websocket",
+            "description": "Websocket URL of the chain",
+            "title": "Websocket URL"
           }
         }
       }
@@ -150,10 +151,12 @@
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
+    "@reactivex/rxjs": "^6.6.7",
     "base64-js": "^1.5.1",
     "crypto": "^1.0.1",
     "crypto-browserify": "^3.12.1",
     "fetch": "^1.1.0",
+    "rxjs": "^7.8.2",
     "stream-browserify": "^3.0.0",
     "ws": "^8.18.1"
   }
