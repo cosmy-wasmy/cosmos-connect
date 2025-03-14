@@ -22,6 +22,7 @@
   "preview": true,
   "activationEvents": [],
   "browser": "./dist/web/extension.js",
+  "main": "./dist/node/extension.js",
   "extensionKind": [
     "ui",
     "workspace"

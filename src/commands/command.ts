@@ -224,7 +224,7 @@ export class Commands {
                     progress.report({ message: 'Creating WebSocket connection' });
                     const ws = new CosmosWS();
                     progress.report({ message: 'Subscribing to new blocks' });
-                    ws.SubscribeToNewBlocks("tm.event='NewBlock'", (block) => {
+                    ws.SubscribeToQuery("tm.event='NewBlock'", (block) => {
                         const height = block.data.value.block.header.height;
                         const time = block.data.value.block.header.time;
                         global.blocksViewProvider.appendBlock(height, block.data.value.block.data.txs, time);
@@ -255,7 +255,7 @@ export class Commands {
                             progress.report({ message: 'Creating WebSocket connection' });
                             const ws = new CosmosWS();
                             progress.report({ message: 'Subscribing to custom events' });
-                            ws.SubscribeToNewBlocks(query, (event) => {
+                            ws.SubscribeToQuery(query, (event) => {
                                 global.customViewProvider.appendCustomItem(JSON.stringify(event, null, 2));
                             }
                             );

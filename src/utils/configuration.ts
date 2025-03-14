@@ -9,3 +9,8 @@ export class Configuration {
         return vscode.workspace.getConfiguration().get<string>("cosmos-connect.websocket", "");
     }
 }
+
+export enum Environment {
+    Node = 'node',
+    Web = 'web'
+}

@@ -69,4 +69,46 @@ const webExtensionConfig = {
 	},
 };
 
-module.exports = [ webExtensionConfig ];
+/** @type WebpackConfig */
+const nodeExtensionConfig = {
+	mode: 'none', // this leaves the source code as close as possible to the original (when packaging we set this to 'production')
+	target: 'node', // extensions run in a node context
+	entry: {
+		'extension': './src/node/extension.ts',
+		'test/suite/index': './src/node/test/suite/index.ts'
+	},
+	output: {
+		filename: '[name].js',
+		path: path.join(__dirname, './dist/node'),
+		libraryTarget: 'commonjs',
+		devtoolModuleFilenameTemplate: '../../[resource-path]'
+	},
+	resolve: {
+		mainFields: ['module', 'main'], // look for `module` entry point in imported node modules
+		extensions: ['.ts', '.js'], // support ts-files and js-files
+		alias: {
+			// provides alternate implementation for node module and source files
+		},
+	},
+	module: {
+		rules: [{
+			test: /\.ts$/,
+			exclude: /node_modules/,
+			use: [{
+				loader: 'ts-loader'
+			}]
+		}]
+	},
+	externals: {
+		'vscode': 'commonjs vscode', // ignored because it doesn't exist
+	},
+	performance: {
+		hints: false
+	},
+	devtool: 'nosources-source-map', // create a source map that points to the original source file
+	infrastructureLogging: {
+		level: "log", // enables logging required for problem matchers
+	},
+}
+
+module.exports = [ webExtensionConfig, nodeExtensionConfig ];

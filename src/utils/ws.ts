@@ -1,5 +1,6 @@
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
-import { Configuration } from './configuration';
+import WebSocket from 'ws';
+import { Configuration, Environment } from './configuration';
 
 export class CosmosWS {
     private readonly _wsUrl = Configuration.GetChainWsUrl();
@@ -7,10 +8,7 @@ export class CosmosWS {
     private _callbackfn: ((result: any) => void) | null = null;
 
     constructor() {
-        this._ws = webSocket({
-            url: this._wsUrl,
-            deserializer: (msg) => JSON.parse(msg.data),
-        })
+        this._ws = this.getWebsocket();
         this._ws.subscribe({
             next: (data: any) => this.handleOnMessage(data),
             error: err => this.handleOnError(err),
@@ -18,7 +16,7 @@ export class CosmosWS {
         });
     }
 
-    public SubscribeToNewBlocks(query: string, callback: (result: any) => void) {
+    public SubscribeToQuery(query: string, callback: (result: any) => void) {
         const params = {
             jsonrpc: "2.0",
             method: "subscribe",
@@ -46,4 +44,18 @@ export class CosmosWS {
     private handleOnError(err: any) { }
 
     private handleOnComplete() { }
+
+    private getWebsocket(): WebSocketSubject<any>{
+        if (global.environment === Environment.Node) {
+            return webSocket({
+                url: this._wsUrl,
+                deserializer: (msg) => JSON.parse(msg.data),
+                WebSocketCtor: WebSocket as any
+            });
+        }
+        return webSocket({
+            url: this._wsUrl,
+            deserializer: (msg) => JSON.parse(msg.data)
+        })
+    }
 }
