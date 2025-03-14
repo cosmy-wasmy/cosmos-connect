@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
+import { Configuration } from '../utils/configuration';
 import { CosmosWS } from '../utils/ws';
 import { CustomItem } from '../views/custom';
-import { Configuration } from '../web/configuration';
 
 export class Commands {
     public static Register(context: vscode.ExtensionContext) {

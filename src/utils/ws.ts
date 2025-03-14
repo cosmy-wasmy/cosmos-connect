@@ -1,5 +1,5 @@
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
-import { Configuration } from "../web/configuration";
+import { Configuration } from './configuration';
 
 export class CosmosWS {
     private readonly _wsUrl = Configuration.GetChainWsUrl();
