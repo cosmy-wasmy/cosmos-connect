@@ -26,7 +26,7 @@ export class BlocksProvider implements vscode.TreeDataProvider<BlockItem> {
             const tx_label = `tx[${index}]`;
             const tx_id = tx_hash;
             const tx_description = tx.body.memo;
-            const txhashItem = new BlockItem("hash", `${tx_id}-hash`, tx_hash, tx_hash, BlockItemType.Info, []);
+            const txhashItem = new BlockItem("hash", `${tx_id}-hash`, tx_hash, tx_hash, BlockItemType.TxHash, []);
             const msgsItem = new BlockItem("msgs", `${tx_id}-msgs`, `${tx.body.messages.length}`, `msgs: ${tx.body.messages.length}`, BlockItemType.Info, tx.body.messages.map((msg, index) => {
                 const msg_label = `msg[${index}]`;
                 const msg_id = `${tx_id}-${index}`;
@@ -77,6 +77,14 @@ class BlockItem extends vscode.TreeItem {
         if (children.length > 0) {
             this.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
         }
+        if (itemtype == BlockItemType.TxHash) {
+            this.command = {
+                command: "cosmos-connect.queryTx",
+                title: "View Transaction",
+                arguments: [description],
+                tooltip: "View Transaction"
+            };
+        }
     }
 }
 
@@ -84,5 +92,6 @@ enum BlockItemType {
     Block = 1,
     Transaction = 2,
     Message = 3,
-    Info = 4
+    TxHash = 4,
+    Info = 5
 }
