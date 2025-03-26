@@ -5,7 +5,7 @@
   "publisher": "Spoorthi",
   "repository": "https://github.com/cosmy-wasmy/cosmos-connect",
   "license": "SEE LICENSE IN LICENSE",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.98.0"
   },
@@ -17,9 +17,11 @@
   "keywords": [
     "cosmos",
     "cosmos-sdk",
-    "tendermint"
+    "tendermint",
+    "cometbft"
   ],
-  "preview": true,
+  "preview": false,
+  "icon": "images/icon.png",
   "activationEvents": [],
   "browser": "./dist/web/extension.js",
   "main": "./dist/node/extension.js",
@@ -159,7 +161,7 @@
         {
           "id": "cosmos-connect",
           "title": "Cosmos Connect",
-          "icon": "images/icon.svg"
+          "icon": "images/icon.svg"    
         }
       ]
     },
