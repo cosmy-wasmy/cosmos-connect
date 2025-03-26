@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { Configuration } from '../utils/configuration';
 import { CosmosWS } from '../utils/ws';
 import { CustomItem } from '../views/custom';
+import { Views } from '../views/view';
 
 export class Commands {
     public static Register(context: vscode.ExtensionContext) {
@@ -14,6 +15,27 @@ export class Commands {
         this.registerSubscibeToNewBlockCommand(context);
         this.registerSubscibeToCustomEventCommand(context);
         this.registerOpenCustomEventCommand(context);
+        this.registerSelectChainCommand(context);
+    }
+
+    private static registerSelectChainCommand(context: vscode.ExtensionContext) {
+        context.subscriptions.push(vscode.commands.registerCommand('cosmos-connect.selectChain', () => {
+            const configs = Configuration.GetChainConfigs();
+            vscode.window.showQuickPick(configs.map(c => c.name), {
+                canPickMany: false,
+                placeHolder: configs[0].name,
+                title: 'Select a chain for the workspace'
+            }).then((selectedChain) => {
+                const chain = configs.find(c => c.name === selectedChain);
+                if (chain) {
+                    Configuration.SetWorkspaceChainConfig(chain).then(() => {
+                        Views.UpdateChainConfigViewItem();
+                        vscode.window.showInformationMessage(`Selected chain: ${chain.name}`);
+                    });
+                }
+            });;
+
+        }));
     }
 
     private static registerQueryTxCommand(context: vscode.ExtensionContext) {
@@ -35,7 +57,7 @@ export class Commands {
                     cancellable: false,
                 }, () => {
                     return new Promise(async (resolve, reject) => {
-                        const baseUrl = Configuration.GetChainRestUrl();
+                        const baseUrl = Configuration.GetWorkspaceChainConfig().rest;
                         const queryTxUrl = `${baseUrl}/cosmos/tx/v1beta1/txs/${txHash}`;
                         const response = await fetch(queryTxUrl);
                         if (!response.ok) {
@@ -65,7 +87,7 @@ export class Commands {
                 cancellable: false,
             }, () => {
                 return new Promise(async (resolve, reject) => {
-                    const baseUrl = Configuration.GetChainRestUrl();
+                    const baseUrl = Configuration.GetWorkspaceChainConfig().rest;
                     const queryNodeInfoUrl = `${baseUrl}/cosmos/base/tendermint/v1beta1/node_info`;
                     const response = await fetch(queryNodeInfoUrl);
                     if (!response.ok) {
@@ -94,7 +116,7 @@ export class Commands {
                 cancellable: false,
             }, () => {
                 return new Promise(async (resolve, reject) => {
-                    const baseUrl = Configuration.GetChainRestUrl();
+                    const baseUrl = Configuration.GetWorkspaceChainConfig().rest;
                     const queryLatestBlockUrl = `${baseUrl}/cosmos/base/tendermint/v1beta1/blocks/latest`;
                     const response = await fetch(queryLatestBlockUrl);
                     if (!response.ok) {
@@ -134,7 +156,7 @@ export class Commands {
                     cancellable: false,
                 }, () => {
                     return new Promise(async (resolve, reject) => {
-                        const baseUrl = Configuration.GetChainRestUrl();
+                        const baseUrl = Configuration.GetWorkspaceChainConfig().rest;
                         const queryBlockByHeightUrl = `${baseUrl}/cosmos/base/tendermint/v1beta1/blocks/${blockHeight}`;
                         const response = await fetch(queryBlockByHeightUrl);
                         if (!response.ok) {
@@ -164,7 +186,7 @@ export class Commands {
                 cancellable: false,
             }, () => {
                 return new Promise(async (resolve, reject) => {
-                    const baseUrl = Configuration.GetChainRestUrl();
+                    const baseUrl = Configuration.GetWorkspaceChainConfig().rest;
                     const queryAllModuleAccountsUrl = `${baseUrl}/cosmos/auth/v1beta1/module_accounts`;
                     const response = await fetch(queryAllModuleAccountsUrl);
                     if (!response.ok) {
@@ -193,7 +215,7 @@ export class Commands {
                 cancellable: false,
             }, () => {
                 return new Promise(async (resolve, reject) => {
-                    const baseUrl = Configuration.GetChainRestUrl();
+                    const baseUrl = Configuration.GetWorkspaceChainConfig().rest;
                     const queryAllDenomsMetadataUrl = `${baseUrl}/cosmos/bank/v1beta1/denoms_metadata`;
                     const response = await fetch(queryAllDenomsMetadataUrl);
                     if (!response.ok) {
@@ -222,8 +244,9 @@ export class Commands {
             }, (progress, cancellationToken) => {
                 return new Promise(async (resolve, reject) => {
                     progress.report({ message: 'Creating WebSocket connection' });
-                    const ws = new CosmosWS();
-                    progress.report({ message: 'Subscribing to new blocks' });
+                    const config = Configuration.GetWorkspaceChainConfig();
+                    const ws = new CosmosWS(config.websocket);
+                    progress.report({ message: 'Subscribing to new blocks of ' + config.name });
                     ws.SubscribeToQuery("tm.event='NewBlock'", (block) => {
                         const height = block.data.value.block.header.height;
                         const time = block.data.value.block.header.time;
@@ -253,8 +276,9 @@ export class Commands {
                     }, (progress, cancellationToken) => {
                         return new Promise(async (resolve, reject) => {
                             progress.report({ message: 'Creating WebSocket connection' });
-                            const ws = new CosmosWS();
-                            progress.report({ message: 'Subscribing to custom events' });
+                            const config = Configuration.GetWorkspaceChainConfig();
+                            const ws = new CosmosWS(config.websocket);
+                            progress.report({ message: 'Subscribing to custom events of ' + config.name });
                             ws.SubscribeToQuery(query, (event) => {
                                 global.customViewProvider.appendCustomItem(JSON.stringify(event, null, 2));
                             }

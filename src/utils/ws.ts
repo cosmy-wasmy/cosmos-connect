@@ -1,13 +1,15 @@
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
+import * as vscode from 'vscode';
 import WebSocket from 'ws';
-import { Configuration, Environment } from './configuration';
+import { Environment } from './configuration';
 
 export class CosmosWS {
-    private readonly _wsUrl = Configuration.GetChainWsUrl();
+    private _wsUrl: string;
     private _ws: WebSocketSubject<any>;
     private _callbackfn: ((result: any) => void) | null = null;
 
-    constructor() {
+    constructor(websocketUrl: string) {
+        this._wsUrl = websocketUrl;
         this._ws = this.getWebsocket();
         this._ws.subscribe({
             next: (data: any) => this.handleOnMessage(data),
@@ -46,7 +48,11 @@ export class CosmosWS {
     private handleOnComplete() { }
 
     private getWebsocket(): WebSocketSubject<any>{
+        if (!this._wsUrl) {
+            vscode.window.showErrorMessage("No websocket URL found in the chain configuration.");
+        }
         if (global.environment === Environment.Node) {
+            
             return webSocket({
                 url: this._wsUrl,
                 deserializer: (msg) => JSON.parse(msg.data),

@@ -82,17 +82,42 @@
       {
         "title": "Cosmos Connect",
         "properties": {
-          "cosmos-connect.rest": {
+          "cosmos-connect.workspaceChain": {
             "type": "string",
-            "default": "https://api.mainnet.archway.io/",
-            "description": "REST API URL of the chain",
-            "title": "REST API URL"
+            "scope": "resource",
+            "readOnly": true
           },
-          "cosmos-connect.websocket": {
-            "type": "string",
-            "default": "wss://rpc.lavenderfive.com/cosmoshub/websocket",
-            "description": "Websocket URL of the chain",
-            "title": "Websocket URL"
+          "cosmos-connect.chains": {
+            "type": "array",
+            "description": "Chains to connect to",
+            "scope": "application",
+            "order": 0,
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Chain Name (should be unique)"
+                },
+                "rest": {
+                  "type": "string",
+                  "description": "REST API URL of the chain"
+                },
+                "websocket": {
+                  "type": "string",
+                  "description": "Websocket URL of the chain"
+                }
+              }
+            },
+            "required": ["name", "rest", "websocket"],
+            "default": [
+              {
+                "name": "Cosmos Hub",
+                "rest": "https://rest.lavenderfive.com:443/cosmoshub",
+                "websocket": "wss://rpc.lavenderfive.com/cosmoshub/websocket"
+              }
+            ]
           }
         }
       }

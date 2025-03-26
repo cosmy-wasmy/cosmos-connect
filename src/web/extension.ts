@@ -5,6 +5,7 @@ import { Commands } from '../commands/command';
 import { Environment } from '../utils/configuration';
 import { BlocksProvider } from '../views/blocks';
 import { CustomProvider } from '../views/custom';
+import { Views } from '../views/view';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -15,6 +16,7 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.window.registerTreeDataProvider('blocks', global.blocksViewProvider);
 	vscode.window.registerTreeDataProvider('custom', global.customViewProvider);
 	Commands.Register(context);
+	Views.Register();
 }
 
 // This method is called when your extension is deactivated
