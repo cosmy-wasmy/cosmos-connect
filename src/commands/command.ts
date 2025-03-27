@@ -244,6 +244,7 @@ export class Commands {
                 cancellable: true,
             }, (progress, cancellationToken) => {
                 return new Promise(async (resolve, reject) => {
+                    vscode.commands.executeCommand("setContext", "showSubscriptionButton", false);
                     progress.report({ message: 'Creating WebSocket connection' });
                     const config = Configuration.GetWorkspaceChainConfig();
                     const ws = new CosmosWS(config.websocket);
@@ -255,6 +256,7 @@ export class Commands {
                     }
                     );
                     cancellationToken.onCancellationRequested(() => {
+                        vscode.commands.executeCommand("setContext", "showSubscriptionButton", true);
                         progress.report({ message: 'Unsubscribing from NewBlock event' });
                         ws.Unsubscribe();
                         resolve(undefined);
@@ -276,6 +278,7 @@ export class Commands {
                         cancellable: true,
                     }, (progress, cancellationToken) => {
                         return new Promise(async (resolve, reject) => {
+                            vscode.commands.executeCommand("setContext", "showSubscriptionButton", false);
                             progress.report({ message: 'Creating WebSocket connection' });
                             const config = Configuration.GetWorkspaceChainConfig();
                             const ws = new CosmosWS(config.websocket);
@@ -285,6 +288,7 @@ export class Commands {
                             }
                             );
                             cancellationToken.onCancellationRequested(() => {
+                                vscode.commands.executeCommand("setContext", "showSubscriptionButton", true);
                                 progress.report({ message: 'Unsubscribing from custom event' });
                                 ws.Unsubscribe();
                                 resolve(undefined);

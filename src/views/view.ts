@@ -6,6 +6,7 @@ export class Views {
 
     public static Register() {
         this.registerChainConfigViewItem();
+        vscode.commands.executeCommand("setContext", "showSubscriptionButton", true);
     }
 
     public static UpdateChainConfigViewItem() {

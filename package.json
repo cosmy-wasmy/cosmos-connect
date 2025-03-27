@@ -65,13 +65,15 @@
         "command": "cosmos-connect.subscribeToNewBlock",
         "title": "Subscribe To New Blocks",
         "icon": "$(debug-start)",
-        "category": "Cosmos Connect"
+        "category": "Cosmos Connect",
+        "enablement": "showSubscriptionButton"
       },
       {
         "command": "cosmos-connect.subscribeToCustomEvent",
         "title": "Subscribe To Custom Event",
         "icon": "$(debug-start)",
-        "category": "Cosmos Connect"
+        "category": "Cosmos Connect",
+        "enablement": "showSubscriptionButton"
       },
       {
         "command": "cosmos-connect.openCustomEvent",
