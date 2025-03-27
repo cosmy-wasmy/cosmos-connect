@@ -13,6 +13,12 @@ export class CustomProvider implements vscode.TreeDataProvider<CustomItem> {
         this._onDidChangeTreeData.fire(undefined);
     }
 
+    public clearAllItems() {
+        this.customItems = [];
+        this.customItemsCount = 0;
+        this._onDidChangeTreeData.fire(undefined);
+    }
+
     private _onDidChangeTreeData = new vscode.EventEmitter<CustomItem | undefined>();
     readonly onDidChangeTreeData?: vscode.Event<CustomItem | undefined> = this._onDidChangeTreeData.event;
 

@@ -41,6 +41,11 @@ export class BlocksProvider implements vscode.TreeDataProvider<BlockItem> {
         this._onDidChangeTreeData.fire(undefined);
     }
 
+    public clearAllItems() {
+        this.blocks = [];
+        this._onDidChangeTreeData.fire(undefined);
+    }
+
     private _onDidChangeTreeData = new vscode.EventEmitter<BlockItem | undefined>();
     readonly onDidChangeTreeData?: vscode.Event<BlockItem | undefined> = this._onDidChangeTreeData.event;
 
@@ -60,7 +65,6 @@ export class BlocksProvider implements vscode.TreeDataProvider<BlockItem> {
     resolveTreeItem?(item: vscode.TreeItem, element: BlockItem, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TreeItem> {
         return element;
     }
-
 }
 
 class BlockItem extends vscode.TreeItem {

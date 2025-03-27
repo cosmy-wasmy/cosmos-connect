@@ -16,6 +16,8 @@ export class Commands {
         this.registerSubscibeToCustomEventCommand(context);
         this.registerOpenCustomEventCommand(context);
         this.registerSelectChainCommand(context);
+        this.registerClearBlocksTreeViewCommand(context);
+        this.registerClearCustomTreeViewCommand(context);
     }
 
     private static registerSelectChainCommand(context: vscode.ExtensionContext) {
@@ -311,6 +313,18 @@ export class Commands {
                     vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside);
                 });
             }
+        }));
+    }
+
+    private static registerClearBlocksTreeViewCommand(context: vscode.ExtensionContext) {
+        context.subscriptions.push(vscode.commands.registerCommand('cosmos-connect.clearBlocksView', () => {
+            global.blocksViewProvider.clearAllItems();
+        }));
+    }
+
+    private static registerClearCustomTreeViewCommand(context: vscode.ExtensionContext) {
+        context.subscriptions.push(vscode.commands.registerCommand('cosmos-connect.clearCustomView', () => {
+            global.customViewProvider.clearAllItems();
         }));
     }
 }

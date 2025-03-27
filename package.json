@@ -80,6 +80,18 @@
         "title": "Open Custom Event",
         "icon": "$(link-external)",
         "category": "Cosmos Connect"
+      },
+      {
+        "command": "cosmos-connect.clearBlocksView",
+        "title": "Clear Blocks View",
+        "icon": "$(clear-all)",
+        "category": "Cosmos Connect"
+      },
+      {
+        "command": "cosmos-connect.clearCustomView",
+        "title": "Clear Custom View",
+        "icon": "$(clear-all)",
+        "category": "Cosmos Connect"
       }
     ],
     "configuration": [
@@ -137,12 +149,22 @@
         {
           "command": "cosmos-connect.subscribeToNewBlock",
           "when": "view == blocks",
-          "group": "navigation"
+          "group": "navigation@1"
+        },
+        {
+          "command": "cosmos-connect.clearBlocksView",
+          "when": "view == blocks",
+          "group": "navigation@2"
         },
         {
           "command": "cosmos-connect.subscribeToCustomEvent",
           "when": "view == custom",
-          "group": "navigation"
+          "group": "navigation@1"
+        },
+        {
+          "command": "cosmos-connect.clearCustomView",
+          "when": "view == custom",
+          "group": "navigation@2"
         }
       ]
     },
