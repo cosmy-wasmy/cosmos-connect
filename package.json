@@ -119,11 +119,13 @@
                 },
                 "rest": {
                   "type": "string",
-                  "description": "REST API URL of the chain"
+                  "description": "REST API URL of the chain",
+                  "examples": ["https://rest.lavenderfive.com:443/cosmoshub", "http://localhost:1317"]
                 },
                 "websocket": {
                   "type": "string",
-                  "description": "Websocket URL of the chain"
+                  "description": "Websocket URL of the chain",
+                  "examples": ["wss://rpc.lavenderfive.com/cosmoshub/websocket", "ws://localhost:26657/websocket"]
                 }
               }
             },

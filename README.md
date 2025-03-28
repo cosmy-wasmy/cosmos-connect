@@ -1,8 +1,8 @@
 # Cosmos Connect
 
 <p align="center">
-<a href="https://marketplace.visualstudio.com/items?itemName=spoorthi.cosmy-wasmy">
-    <img src="https://raw.githubusercontent.com/cosmy-wasmy/cosmos-connect/main/images/icon.png" alt="Cosmy Wasmy logo" title="Cosmos Connect icon" align="center" width="150" />
+<a href="https://marketplace.visualstudio.com/items?itemName=spoorthi.cosmos-connect">
+    <img src="https://raw.githubusercontent.com/cosmy-wasmy/cosmos-connect/main/images/icon.png" alt="Cosmos Connect logo" title="Cosmos Connect icon" align="center" width="150" />
 </a>
 </p>
 
@@ -42,10 +42,6 @@ Alternatively,
 You can install Cosmos Connect from the [visual studio marketplace](https://marketplace.visualstudio.com/items?itemName=spoorthi.cosmos-connect) 
 
 Or, you can search for `Cosmos Connect` in vscode Extensions sidebar. 
-
-> **Note**
->
-> The extension provides Walkthroughs for the major features. You can access the walkthroughs by going to Command Palette (Windows: `Ctrl+Shft+P`, MacOS: `Cmd+Shft+P`, Linux: `Ctrl+Shft+P`) and selecting **"Welcome: Open Walkthrough"**.
 
 It is recommended post installation to configure the extension for your use case. Here are the first few things you might wanna do.
 
